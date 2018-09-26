@@ -56,13 +56,13 @@ class DisplayController extends Controller
 
             $data = array();
             $image = array();
-            $Events = event::where('start_timestamp','<',$upcomingDate)->get();
+            $Events = event::where([['start_timestamp','<',$upcomingDate],['publish',1]])->get();
             foreach ($Events as $Event) {
                 $data1 = array();
                 $image1 = array();
                 $data1['event_id'] = $Event->event_id;
                 $data1['event_name'] = $Event->event_name;
-                $data1['timestamp'] = $Event->start_timestamp;
+                $data1['timestamp'] = date('d-m-Y H:i a',strtotime($Event->start_timestamp));
                 $data1['image'] = $Event->images;
                 $data1['url_name'] = "https://thetickets.in/event/".$Event->url_name;
                 $image1['image'] = $Event->images;
@@ -75,7 +75,7 @@ class DisplayController extends Controller
             else
                 return respoonse()->json(['status'=>false,'error'=>'Currenly There are no Events To display']);
         } catch (\Exception $e) {
-            return respoonse()->json(['status'=>false,'error'=>'Please Try again after soem time.']);
+            return response()->json(['status'=>false,'error'=>'Please Try again after some time.']);
         }
 
     }
